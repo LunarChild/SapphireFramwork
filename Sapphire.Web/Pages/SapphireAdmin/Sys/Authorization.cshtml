@@ -1,0 +1,406 @@
+﻿@page
+@model Sapphire.Web.Pages.SapphireAdmin.Sys.AuthorizationModel
+@{
+    ViewData["Title"] = "权限管理";
+    Layout = AdminLayout.Pjax(HttpContext);
+}
+<div id="container">
+    <style>
+        .l220 {
+            left: 220px;
+            background-color: #ffffff;
+            border-right: 1px solid #e4eaec;
+        }
+
+            .l220 .layui-nav-title {
+                background-color: #ffffff;
+                position: relative;
+                font-weight: normal;
+                border-bottom: 1px solid #e4eaec;
+            }
+
+        .role {
+            overflow: auto;
+        }
+
+            .role li a {
+                display: block;
+                padding: 10px 20px;
+            }
+
+            .role li.active a {
+                background-color: #f3f7f9;
+                color: #409eff;
+            }
+
+        .l440 {
+            left: 441px;
+        }
+
+            .l440 .layui-nav-title {
+                width: 100%;
+                height: 70px;
+                line-height: 70px;
+                background: #d9dee4;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-weight: bold;
+                text-indent: 20px;
+                background-color: #ffffff;
+                position: relative;
+                font-weight: normal;
+                border-bottom: 1px solid #e4eaec;
+            }
+
+        .menu-wall .layui-tree-cus {
+            overflow: auto;
+        }
+
+            .menu-wall .layui-tree-cus li {
+                padding: 4px 0;
+            }
+
+            .menu-wall .layui-tree-cus ul li {
+                padding-left: 45px;
+                line-height: 30px;
+            }
+
+            .menu-wall .layui-tree-cus span {
+                cursor: pointer;
+            }
+
+        .menu-wall {
+            padding: 15px;
+        }
+
+            .menu-wall .layui-tree-cus .btnfun {
+                display: inline-block;
+                margin-left: 50px;
+                text-align: right;
+            }
+
+                .menu-wall .layui-tree-cus .btnfun label {
+                    margin-left: 25px;
+                }
+
+        .menu-save {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .menu-wall .layui-tree-iconClick {
+            margin: 0px 2px;
+        }
+    </style>
+    <div id="app">
+        <div class="layui-col-220">
+            <div class="layui-nav-title">组织机构</div>
+            <div id="tree" class="layui-tree-cus" style="overflow:auto;"></div>
+        </div>
+        <div class="layui-col-220 l220">
+            <div class="layui-nav-title">角色列表</div>
+            <ul class="role">
+                <li :class="index==roleActive?'active':''" v-for="(it,index) in roleList" v-cloak @@click="roleGoMenu(it,index)"><a href="javascript:void(0)">{{it.name}}</a></li>
+            </ul>
+        </div>
+        <div class="right-col-body l440">
+            <div class="layui-nav-title">菜单列表</div>
+            <div class="menu-wall soa-cur" style="padding-bottom: 0px;">
+                <ul class="layui-tree-cus" id="checkui" v-for="it in treeData">
+                    <tree-item class="item" :item="it" @@make-folder="makeFolder"></tree-item>
+                </ul>
+                <div class="menu-save layui-cur-submit" style="border-top: 1px solid #f5f6f7">
+                    <button type="button" class="layui-btn" id="submit" onclick="fun.saveMenu()"><i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-hide"></i>保存权限</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/x-template" id="item-template">
+            <li>
+              <div
+                class="bold"
+                :class="{bold: isFolder}"
+                >
+                <span @@click="toggle" @@dblclick="makeFolder" v-if="isFolder"><a class="layui-tree-iconClick layui-tree-icon"><i class="layui-icon" :class="isOpen?'layui-icon-subtraction':'layui-icon-addition'"></i></a></span>
+                <label><input type="checkbox" v-model="item.isChecked" :checked="item.isChecked?'checked':''" @@click="selectCbk(item,$event)" name="cbkmenu"  />{{ item.name }}</label>
+                <div class="btnfun" v-if="item.btnFun">
+                    <label v-for="it in item.btnFun"><input type="checkbox" v-model="it.status" :checked="it.status?'checked':''" name="cbkmenu" @@click="selectBtnCbk(it,item,$event)" />{{it.name}}</label>
+                </div>
+              </div>
+              <ul v-show="isOpen" v-if="isFolder">
+                <tree-item
+                  class="item"
+                  v-for="(child, index) in item.children"
+                  :key="index"
+                  :item="child"
+                  @@make-folder="$emit('make-folder', $event)"
+                ></tree-item>
+              </ul>
+            </li>
+    </script>
+    <script>
+        Vue.component("tree-item", {
+            template: "#item-template",
+            props: {
+                item: Object
+            },
+            data: function () {
+                return {
+                    isOpen: true
+                };
+            },
+            computed: {
+                isFolder: function () {
+                    return this.item.children && this.item.children.length;
+                }
+            },
+            methods: {
+                toggle: function () {
+                    if (this.isFolder) {
+                        this.isOpen = !this.isOpen;
+                    }
+                },
+                makeFolder: function () {
+                    if (!this.isFolder) {
+                        this.$emit("make-folder", this.item);
+                        this.isOpen = true;
+                    }
+                },
+                selectCbk: function (m, e) {
+                    var that = this;
+                    this.selectParentCbk(m, e.target.checked);
+                    vm.menuList.some(item => {
+                        if (item.parentGuidList.indexOf(m.guid) > -1) {
+                            if (e.target.checked) {
+                                item.isChecked = true;
+                                if (item.btnFun) {
+                                    item.btnFun.some(m => {
+                                        m.status = true;
+                                    });
+                                }
+                            } else {
+                                item.isChecked = false;
+                                if (item.btnFun) {
+                                    item.btnFun.some(m => {
+                                        m.status = false;
+                                    });
+                                }
+                            }
+                        }
+                    });
+                },
+                selectBtnCbk(m, pm, e) {
+                    if (e.target.checked) {
+                        vm.menuList.some(item => {
+                            if (item.guid == pm.guid && !item.isChecked) {
+                                item.isChecked = true;
+                            }
+                        });
+                    } else {
+                        var isLayerCbk = false;
+                        pm.btnFun.some(item => {
+                            if (item.status && item.guid != m.guid) {
+                                isLayerCbk = true;
+                                return true;
+                            }
+                        });
+                        if (!isLayerCbk) {
+                            pm.isChecked = false;
+                        }
+                    }
+                },
+                selectParentCbk(m, cbk_status) {
+                    var that = this;
+                    var arr = m.parentGuidList.split(',').filter(item => item != '');
+                    arr.some(item => {
+                        if (item != m.guid) {
+                            vm.menuList.some(row => {
+                                if (row.guid === item && m.layer > row.layer) {
+                                    if (cbk_status) {
+                                        row.isChecked = true;
+                                    } else {
+                                        if (!that.childrenIsSelect(m.parentGuid)) {
+                                            row.isChecked = false;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                },
+                childrenIsSelect(pid) {
+                    var isRes = false;
+                    vm.menuList.some(item => {
+                        if (item.parentGuid === pid && item.isChecked) {
+                            isRes = true;
+                            return true;
+                        }
+                    });
+                    return isRes;
+                }
+            }
+        });
+        var os, $, fun, vm = new Vue({
+            el: '#app',
+            data: {
+                roleList: [],
+                roleActive: 0,
+                roleGuid: '',
+                treeData: []
+            },
+            methods: {
+                roleGoMenu: function (m, index) {
+                    var that = this;
+                    layer.confirm('授权功能尚未保存，是否确认查看其它角色权限？', function (is) {
+                        layer.close(is);
+                        that.roleActive = index;
+                        that.roleGuid = m.guid;
+                        that.menuList = [];
+                        fun.menuList(m.guid);
+                    });
+                },
+                makeFolder: function (item) {
+                    Vue.set(item, "children", []);
+                },
+                submitMenu() {
+                    console.log(_tempDate);
+                },
+                changeTree: function (data) {
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const parentId = item.parentGuid;
+                            if (parentId) {
+                                data.forEach(ele => {
+                                    if (ele.guid === parentId) {
+                                        let childArray = ele.children;
+                                        if (!childArray) {
+                                            childArray = [];
+                                        }
+
+                                        childArray.push(item);
+                                        ele.children = childArray;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    return data.filter(item => !item.parentGuid);
+                }
+            }
+        });
+        layui.config({
+            base: '/themes/js/modules/'
+        }).use(['table', 'layer', 'jquery', 'tree', 'common'],
+            function () {
+                $ = layui.jquery,
+                    os = layui.common,
+                    tree = layui.tree;
+
+                $('.layui-tree-cus').css({ 'height': $(window).height() - 206 });
+                $('.role').css({ 'height': $(window).height() - 132 });
+                fun = {
+                    initTree() {
+                        os.ajax('api/organize/gettree/', {}, function (res) {
+                            tree.render({
+                                elem: '#tree'
+                                , data: res
+                                , onlyIconControl: true
+                                , click: function (obj) {
+                                    fun.initRole(obj.data.id);
+                                }
+                            });
+                        });
+                    },
+                    //根据部门查询角色
+                    initRole: function (guid) {
+                        os.ajax('api/role/getpages', { key: guid }, function (res) {
+                            if (res.count != 0) {
+                                vm.roleList = res.data;
+                                //默认第一条选中
+                                vm.roleGuid = vm.roleList[0].guid;
+                                vm.roleActive = 0;
+                                fun.menuList(vm.roleGuid);
+                            }
+                        }, 'get');
+                    },
+                    //根据角色查询菜单和权限
+                    menuList: function (roleguid) {
+                        os.ajax('api/menu/list', {  }, function (res) {
+                            //console.log(res);
+                            if (res.statusCode === 200) {
+                                vm.menuList = res.data;
+                                if (roleguid) {
+                                    fun.checkedMenu(roleguid);
+                                } else {
+                                    vm.treeData = vm.changeTree(res.data);
+                                }
+                            } else {
+                                os.error(res.message);
+                            }
+                        },'get');
+                    },
+                    checkedMenu: function (roleid) {
+                        os.ajax('api/menu/role/authorizat', { roleId: roleid }, function (res) {
+                            if (res.statusCode == 200) {
+                                console.log(res.data)
+                                $.each(vm.menuList, function (i, item) {
+                                    $.each(res.data, function (j, row) {
+                                        if (item.guid == row.menuGuid) {
+                                            item.isChecked = true;
+                                        }
+                                        $.each(item.btnFun, function (g, sitem) {
+                                            $.each(row.btnFun, function (h, ritem) {
+                                                if (sitem.guid == ritem.guid && item.guid == row.menuGuid && ritem.status) {
+                                                    sitem.status = true;
+                                                }
+                                            })
+                                        })
+                                    })
+                                })
+                                vm.treeData = vm.changeTree(vm.menuList);
+                            } else {
+                                os.error(res.message);
+                            }
+                        }, 'get');
+                    },
+                    saveMenu: function () {
+                        var _list = [];
+                        $.each(vm.menuList, function (i, item) {
+                            if (item.isChecked) {
+                                _list.push({
+                                    menuId: item.guid,
+                                    name: item.name,
+                                    btnFun: item.btnFun
+                                });
+                            }
+                        })
+                        //console.log(_list)
+                        if (_list.length == 0) {
+                            os.error('请选择授权信息~');
+                            return;
+                        }
+                        var param = {
+                            roleId: vm.roleGuid,
+                            menus: _list
+                        };
+                        console.log(param)
+                        //os.log(vm.menuList);
+                        //return;
+                        $('#submit').attr('disabled', true).find('i').removeClass('layui-hide');
+                        os.ajax('api/menu/save/authorizat', param, function (res) {
+                            $('#submit').attr('disabled', false).find('i').addClass('layui-hide');
+                            if (res.statusCode === 200) {
+                                os.success('授权成功~');
+                            } else {
+                                os.error(res.message);
+                            }
+                        });
+                    }
+                };
+                fun.initRole('');
+                fun.initTree();
+
+            });</script>
+</div>

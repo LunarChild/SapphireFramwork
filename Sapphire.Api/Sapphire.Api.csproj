@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LinqKit.Core" Version="1.1.27" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sapphire.Common\Sapphire.Common.csproj" />
+    <ProjectReference Include="..\Sapphire.Core\Sapphire.Core.csproj" />
+    <ProjectReference Include="..\Sapphire.Extensions\Sapphire.Extensions.csproj" />
+    <ProjectReference Include="..\Sapphire.Service\Sapphire.Service.csproj" />
+    <ProjectReference Include="..\Sapphire.Tasks\Sapphire.Tasks.csproj" />
+  </ItemGroup>
+
+</Project>
