@@ -18,7 +18,7 @@
                             <select name="cat" id="move_to_category" class="select-grey-bg chosen-select">
                                 <option value="">选择分类</option>
                                 @{
-                                    if (Model.classifyList.Any())
+                                    if (Model.classifyList!=null&&Model.classifyList.Any())
                                     {
                                         foreach (var item in Model.classifyList)
                                         {
