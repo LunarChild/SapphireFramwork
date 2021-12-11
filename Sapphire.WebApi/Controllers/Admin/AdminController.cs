@@ -221,7 +221,7 @@ namespace Sapphire.WebApi.Controllers
                     Logger = LogEnum.LOGIN.GetEnumText(),
                     Level = "Info",
                     Message = "登录："+parm.loginname,
-                    Callsite = "/fytadmin/login",
+                    Callsite = "/sapphireadmin/login",
                     IP = Utils.GetIp(),
                     User = parm.loginname,
                     Browser = agent.ToString()
@@ -244,7 +244,7 @@ namespace Sapphire.WebApi.Controllers
                     Level = "Error",
                     Message = "登录失败！" + ex.Message,
                     Exception = ex.Message,
-                    Callsite = "/fytadmin/login",
+                    Callsite = "/sapphireadmin/login",
                     IP = Utils.GetIp(),
                     User = parm.loginname,
                     Browser = agent.ToString()
@@ -285,7 +285,7 @@ namespace Sapphire.WebApi.Controllers
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok(new ApiResult<string>() { data = "/fytadmin/login/" });
+            return Ok(new ApiResult<string>() { data = "/sapphireadmin/login/" });
         }
 
         /// <summary>

@@ -159,9 +159,12 @@ try
 
     app.UseRouting();
     //app.UseMvc();
-    app.UseAuthorization();
+   
     app.MapControllers();
     app.MapRazorPages();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     #region Ç¨ÒÆ´úÂë
 

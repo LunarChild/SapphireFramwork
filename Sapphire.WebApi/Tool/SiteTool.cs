@@ -35,6 +35,7 @@ namespace Sapphire.WebApi
         /// <summary>
         /// 获得皮肤信息
         /// </summary>
-        public static string Theme => RedisHelper.Get<string>(KeyHelper.ADMINTHEME) ?? "default";
+        public static string Theme => "default";
+        //public static string Theme => RedisHelper.Get<string>(KeyHelper.ADMINTHEME) ?? "default";
     }
 }

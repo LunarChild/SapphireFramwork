@@ -33,7 +33,7 @@ namespace Sapphire.Web.Pages.SapphireAdmin
             //auth.Result.Succeeded;
             if (auth.Status.ToString()!= "Faulted")
             {
-                RedirectToPage("Index");
+                RedirectToPage("/SapphireAdmin/Index");
             }
             Number = Utils.Number(15);
             RsaKey = RSACrypt.GetKey();
