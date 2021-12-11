@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sapphire.Api\Sapphire.Api.csproj" />
     <ProjectReference Include="..\Sapphire.Common\Sapphire.Common.csproj" />
     <ProjectReference Include="..\Sapphire.Core\Sapphire.Core.csproj" />
     <ProjectReference Include="..\Sapphire.Service\Sapphire.Service.csproj" />
+    <ProjectReference Include="..\Sapphire.WebApi\Sapphire.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

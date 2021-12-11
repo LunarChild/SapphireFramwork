@@ -12,6 +12,7 @@ namespace Sapphire.Core.Model.Sys
         /// <summary>
         /// 唯一编号
         /// </summary>
+        [SugarColumn(IsPrimaryKey =true)]
         public string Guid { get; set; }
 
         /// <summary>

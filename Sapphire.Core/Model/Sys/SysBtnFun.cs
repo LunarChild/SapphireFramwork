@@ -1,4 +1,6 @@
-﻿namespace Sapphire.Core.Model.Sys
+﻿using SqlSugar;
+
+namespace Sapphire.Core.Model.Sys
 {
     /// <summary>
     /// 权限-菜单对应的功能列表
@@ -8,6 +10,7 @@
         /// <summary>
         /// 唯一ID
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]
         public string Guid { get; set; }
 
         /// <summary>

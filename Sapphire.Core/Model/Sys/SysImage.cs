@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -18,7 +19,8 @@ namespace Sapphire.Core.Model.Sys
         /// Desc:
         /// Default:
         /// Nullable:False
-        /// </summary>           
+        /// </summary>    
+        [SugarColumn(IsPrimaryKey = true)]
         public string Guid { get; set; }
 
         /// <summary>

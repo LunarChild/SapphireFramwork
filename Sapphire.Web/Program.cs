@@ -22,6 +22,11 @@ try
     var builder = WebApplication.CreateBuilder(args);
     // Add services to the container.
     builder.Services.AddRazorPages();
+    builder.Services.AddControllersWithViews();
+    builder.Services.AddControllers();
+    //builder.Services.AddMvc();
+    builder.Services.AddRouting();
+    
     builder.Services
         .AddSingleton<IServiceCollection, ServiceCollection>();
 
@@ -120,7 +125,6 @@ try
         c.AddPolicy("Limit", policy =>
         {
             policy
-            .WithOrigins("localhost:4909")
             .WithMethods("get", "post", "put", "delete")
             //.WithHeaders("Authorization");
             .AllowAnyHeader();
@@ -154,9 +158,9 @@ try
     app.UseStaticFiles();
 
     app.UseRouting();
-
+    //app.UseMvc();
     app.UseAuthorization();
-
+    app.MapControllers();
     app.MapRazorPages();
 
     #region Ç¨ÒÆ´úÂë

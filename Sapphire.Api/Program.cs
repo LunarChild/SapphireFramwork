@@ -11,9 +11,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+    options.AddPolicy("AnyAll", policy =>
+    {
+        policy.WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS").AllowAnyOrigin()
+        ;
+    });
 });
-builder.Services.AddMvc();
+builder.Services.AddRouting();
 
 
 var app = builder.Build();
@@ -32,8 +36,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("AllowAll");
-app.UseMvc();
+app.UseCors("AnyAll");
+app.UseRouting();
 
 
 app.Run();

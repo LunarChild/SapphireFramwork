@@ -21,7 +21,8 @@ namespace Sapphire.Core.Model.Sys
         /// Desc:角色Guid
         /// Default:
         /// Nullable:False
-        /// </summary>           
+        /// </summary>    
+        [SugarColumn(IsPrimaryKey = true)]
         public string RoleGuid { get; set; }
 
         /// <summary>

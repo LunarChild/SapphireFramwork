@@ -17,7 +17,8 @@ namespace Sapphire.Core
             {
                 ConnectionString = ConfigExtensions.Configuration["DbConnection:MySqlConnectionString"],
                 DbType = DbType.MySql,
-                IsAutoCloseConnection = true
+                IsAutoCloseConnection = true,
+                
             });
             //调式代码 用来打印SQL 
             Db.Aop.OnLogExecuting = (sql, pars) =>

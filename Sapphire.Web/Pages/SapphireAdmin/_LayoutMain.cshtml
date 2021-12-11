@@ -11,7 +11,7 @@
     <meta name="referrer" content="no-referrer" />
     <link rel="stylesheet" href="~/themes/layui/css/layui.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/build/admin/css/site.min.css" asp-append-version="true">
-    <link rel="stylesheet" href="/themes/css/theme/@(Sapphire.Api.SiteTool.Theme).css" class="theme-color"
+    <link rel="stylesheet" href="/themes/css/theme/@(Sapphire.WebApi.SiteTool.Theme).css" class="theme-color"
           type="text/css" asp-append-version="true" />
     <script type="text/javascript" src="~/themes/js/modules/vue.js"></script>
     <script src="~/themes/layui/layui.js"></script>
@@ -80,7 +80,7 @@
                     <a href="javascript:void(0)" @@click="clearCache"><i class="layui-icon layui-icon-fonts-clear"></i>清除缓存</a>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:void(0)"><i class="layui-icon layui-icon-website"></i>@(Sapphire.Api.SiteTool.CurrentSite?.SiteName) </a>
+                    <a href="javascript:void(0)"><i class="layui-icon layui-icon-website"></i>@(Sapphire.WebApi.SiteTool.CurrentSite?.SiteName) </a>
                     <dl class="layui-nav-child">
                         <dd><a><i class="layui-icon layui-icon-fonts-code"></i>站点切换</a></dd>
                         <hr />

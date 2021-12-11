@@ -20,7 +20,8 @@ namespace Sapphire.Core.Model.Sys
         /// Desc:唯一编号
         /// Default:
         /// Nullable:False
-        /// </summary>           
+        /// </summary>    
+        [SugarColumn(IsPrimaryKey = true)]
         public string Guid { get; set; }
 
         /// <summary>

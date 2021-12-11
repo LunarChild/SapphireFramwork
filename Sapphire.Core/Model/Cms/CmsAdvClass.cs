@@ -9,12 +9,13 @@ namespace Sapphire.Core.Model.Cms
     [SugarTable("Cms_AdvClass")]
     public class CmsAdvClass
     {
-        
+
         /// <summary>
         /// Desc:-
         /// Default:-
         /// Nullable:False
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]
         public string Guid {get;set;}
 
         /// <summary>
